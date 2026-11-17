@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+- Wii Classic: fixed inverted up/down on the sticks (DSU Controller sends Y = 0 for up; confirmed on a real device).
+- Settings → Sticks: live view of both sticks with invert horizontal/vertical, swap axes (X ↔ Y) and swap left/right
+  sticks.
+- The purple controller icon is now the icon of the executable, the taskbar and shortcuts.
+
 ## 1.2.0
 
 - Project renamed from *DSU Longshot* to **DSU Pad**: it is a general-purpose controller bridge, not tied to one game.
