@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- Project renamed from *DSU Longshot* to **DSU Pad**: it is a general-purpose controller bridge, not tied to one game.
+- Executable and release files are now `DSU-Pad.exe` / `DSU-Pad-<version>-windows.zip`.
+- Settings and profiles move to `%APPDATA%\DSU-Pad`; data from `%APPDATA%\DSU-Longshot` is copied automatically
+  on first launch (the old folder is kept).
+
 ## 1.1.0
 
 - New controller layouts: **Wii Classic** (full controller with two sticks, L3/R3 and d-pad) and **Wii Remote**.

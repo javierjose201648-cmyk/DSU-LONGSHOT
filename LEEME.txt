@@ -1,6 +1,6 @@
-DSU Longshot - use any DSU (cemuhook) controller as a virtual DualShock 4 with gyro on Windows.
+DSU Pad - use any DSU (cemuhook) controller as a virtual DualShock 4 with gyro on Windows.
 
-1. Run DSU-Longshot.exe (if SmartScreen warns: "More info" -> "Run anyway"; the program is not signed).
+1. Run DSU-Pad.exe (if SmartScreen warns: "More info" -> "Run anyway"; the program is not signed).
 2. If the Connection page says ViGEmBus is missing: click "Install ViGEmBus", accept and RESTART Windows.
 3. Type the IP address shown by your DSU app and click Connect.
 4. Controller: pick the same layout as in your DSU app (Left Joy-Con, Wii Classic or Wii Remote).
@@ -8,15 +8,15 @@ DSU Longshot - use any DSU (cemuhook) controller as a virtual DualShock 4 with g
 6. Play -> Enable controller. Then start your game.
 
 Language: Settings -> Language (English / Español).
-Profiles and error log: %APPDATA%\DSU-Longshot
-Try it without a device: DSU-Longshot.exe --simulador  (it connects to 127.0.0.1)
+Profiles and error log: %APPDATA%\DSU-Pad
+Try it without a device: DSU-Pad.exe --simulador  (it connects to 127.0.0.1)
 Full documentation: README.md in the project repository.
 
 ---
 
-DSU Longshot - usa cualquier control DSU (cemuhook) como DualShock 4 virtual con giroscopio en Windows.
+DSU Pad - usa cualquier control DSU (cemuhook) como DualShock 4 virtual con giroscopio en Windows.
 
-1. Abre DSU-Longshot.exe (si SmartScreen avisa: "Más información" -> "Ejecutar de todas formas").
+1. Abre DSU-Pad.exe (si SmartScreen avisa: "Más información" -> "Ejecutar de todas formas").
 2. Si la página Conexión dice que falta ViGEmBus: "Instalar ViGEmBus", acepta y REINICIA Windows.
 3. Escribe la IP que muestra tu app DSU y pulsa Conectar.
 4. Control: elige el mismo tipo de control que en tu app DSU.

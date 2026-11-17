@@ -254,7 +254,7 @@ def test_gyro_satura_sin_desbordar():
 
 # ---------------------------------------------------------------- perfiles
 def test_carga_de_calibracion_vieja_v1(tmp_path, monkeypatch):
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     p = PF.cargar_archivo(os.path.join(REF, "calibracion.json"))
     assert p["version"] == PF.VERSION_ESQUEMA and p["calibrado"]
     assert p["slot"] == 1
@@ -269,7 +269,7 @@ def test_carga_de_calibracion_vieja_v1(tmp_path, monkeypatch):
 
 
 def test_perfil_ida_y_vuelta_y_gestion(tmp_path, monkeypatch):
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     p = PF.perfil_por_defecto("lado", "Mi perfil: prueba/1")
     p["gyro"]["bias"] = [0.1, 0.2, 0.3]
     PF.guardar(p)
@@ -299,3 +299,15 @@ def test_perfil_corrupto_se_sanea():
                    "mapeo": {"A": "NOEXISTE", "B": "ABAJO"}})
     assert p["gyro"]["perm"] == [0, 1, 2] and p["gyro"]["signo"] == [1, 1, 1]
     assert p["mapeo"] == {"B": "ABAJO"}
+
+
+def test_datos_de_la_version_anterior_se_copian(tmp_path, monkeypatch):
+    monkeypatch.delenv("DSU_PAD_DATOS", raising=False)
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    vieja = tmp_path / PF.CARPETA_VIEJA / "perfiles"
+    vieja.mkdir(parents=True)
+    p = PF.perfil_por_defecto("lado", "Mio")
+    PF.guardar(p, str(vieja / "Mio.json"))
+    assert PF.carpeta_datos() == str(tmp_path / "DSU-Pad")
+    assert PF.listar() == ["Mio"]
+    assert vieja.exists()                  # la carpeta vieja no se borra

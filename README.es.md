@@ -1,21 +1,27 @@
-# DSU Longshot
+# DSU Pad
 
 **Convierte cualquier control DSU (cemuhook) con movimiento en un DualShock 4 virtual con giroscopio en Windows.**
 
 [English](README.md)
 
-DSU Longshot recibe botones, sticks y movimiento de cualquier dispositivo que hable el
+DSU Pad recibe botones, sticks y movimiento de cualquier dispositivo que hable el
 [protocolo DSU / cemuhook](https://v1993.github.io/cemuhook-protocol/). Por ejemplo, un teléfono con una app de control
 DSU. La app calibra esa entrada y crea un **DualShock 4 virtual con giroscopio**. Así, cualquier juego que lea controles
 por SDL o Steam Input ve un control de movimiento real.
 
-Nació para **Longshot**, el port nativo para PC de *Ocarina of Time*, pero sirve con cualquier juego o emulador basado
-en SDL.
+Es un adaptador de control de uso general: Windows ve un DualShock 4 normal. Por eso funciona con:
+
+- juegos de PC;
+- Steam, incluido Steam Input, que puede convertir el giroscopio en mouse aunque el juego no lo soporte;
+- emuladores como Dolphin, Cemu o Ryujinx;
+- juegos que solo aceptan control de Xbox, con la salida Xbox 360 opcional.
+
+Empezó como una forma de jugar **Longshot**, el port nativo para PC de *Ocarina of Time*, apuntando con movimiento.
 
 ```
-dispositivo DSU ──Wi-Fi / UDP 26760──▶ DSU Longshot ──▶ DualShock 4 virtual (ViGEmBus) ──▶ SDL / Steam Input ──▶ juego
-                                                    ├─▶ Xbox 360 virtual (opcional, giroscopio → stick derecho)
-                                                    └─▶ servidor DSU (opcional, para Dolphin, Cemu, …)
+dispositivo DSU ──Wi-Fi / UDP 26760──▶ DSU Pad ──▶ DualShock 4 virtual (ViGEmBus) ──▶ SDL / Steam Input ──▶ juego
+                                               ├─▶ Xbox 360 virtual (opcional, giroscopio → stick derecho)
+                                               └─▶ servidor DSU (opcional, para Dolphin, Cemu, …)
 ```
 
 ## Características
@@ -62,8 +68,8 @@ distinto. Se agradecen reportes de pruebas con dispositivos reales.
 
 ## Instalación
 
-1. Descarga `DSU-Longshot-<versión>-windows.zip` de **Releases** y descomprímelo. No hace falta Python.
-2. Abre `DSU-Longshot.exe`. El programa no está firmado, así que SmartScreen puede avisar: elige
+1. Descarga `DSU-Pad-<versión>-windows.zip` de **Releases** y descomprímelo. No hace falta Python.
+2. Abre `DSU-Pad.exe`. El programa no está firmado, así que SmartScreen puede avisar: elige
    **Más información → Ejecutar de todas formas**.
 3. Si la página **Conexión** dice que falta ViGEmBus, pulsa **Instalar ViGEmBus** y reinicia Windows.
 4. Si el Firewall de Windows pregunta, permite la app en **redes privadas**. La app recibe paquetes UDP.
@@ -79,7 +85,7 @@ distinto. Se agradecen reportes de pruebas con dispositivos reales.
 5. **Jugar:** pulsa **Activar control** y luego abre el juego.
 
 Las siguientes veces basta con abrir la app → **Jugar → Activar control**. También puedes marcar *Conectar sola al
-abrir la app*, o abrir `DSU-Longshot.exe --jugar`, que conecta y activa el control al abrir.
+abrir la app*, o abrir `DSU-Pad.exe --jugar`, que conecta y activa el control al abrir.
 
 ## Uso con juegos
 
@@ -115,7 +121,7 @@ juego verá dos controles.
 | El apuntado va al revés | Invierte el eje en **Ajustes → Movimiento** o en el juego, o repite **Calibración → Giros**. |
 | Aparecen dos controles | Deja activo solo uno: *DualShock 4* o *Xbox 360*. |
 | Botones pegados al perder la señal | Si pasan 2 s sin datos, el control vuelve a neutro solo. |
-| La app se cierra | Revisa `%APPDATA%\DSU-Longshot\errores.log`. |
+| La app se cierra | Revisa `%APPDATA%\DSU-Pad\errores.log`. |
 
 ## Limitaciones conocidas
 

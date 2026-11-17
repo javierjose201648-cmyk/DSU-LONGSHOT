@@ -53,6 +53,6 @@ UDP (DSU / cemuhook)  →  protocolo.ClienteDSU  →  motor.Motor (thread)
    −/+ → −/+.
 7. **Wii Classic / Wii Remote default mapping.** Each button is sent as the bit the DSU app uses for it, which is what
    the app's Dolphin profiles expect (Classic: a = ○, b = ✕, x = △, y = □, AL/AR = L3/R3).
-8. **Profiles** are JSON files in `%APPDATA%\DSU-Longshot\perfiles`; files from older versions are migrated on load.
-9. **Interface language** is stored in `%APPDATA%\DSU-Longshot\ajustes.json` (`"idioma": "en" | "es"`) and applies on
+8. **Profiles** are JSON files in `%APPDATA%\DSU-Pad\perfiles`; files from older versions are migrated on load.
+9. **Interface language** is stored in `%APPDATA%\DSU-Pad\ajustes.json` (`"idioma": "en" | "es"`) and applies on
    restart.

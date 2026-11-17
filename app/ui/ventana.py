@@ -23,7 +23,7 @@ from app.i18n import T
 from app.ui.widgets import (AMBAR, MORADO, ROJO, TENUE, VERDE, JoyConWidget, MovimientoWidget,
                             Semaforo, StickWidget)
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 
 def fuente_a_fisicos(perfil):
@@ -1466,7 +1466,7 @@ class PaginaJugar(Pagina):
 class Ventana(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(f"DSU Longshot {VERSION}")
+        self.setWindowTitle(f"DSU Pad {VERSION}")
         self.setWindowIcon(icono_app())
         self.resize(1080, 760)
         self.setMinimumSize(940, 640)
@@ -1511,7 +1511,7 @@ class Ventana(QMainWindow):
         self.bandeja.setContextMenu(menu)
         self.bandeja.activated.connect(
             lambda r: self.de_bandeja() if r in (QSystemTrayIcon.Trigger, QSystemTrayIcon.DoubleClick) else None)
-        self.bandeja.setToolTip("DSU Longshot")
+        self.bandeja.setToolTip("DSU Pad")
 
         self.reloj = QTimer(self)
         self.reloj.timeout.connect(self._tic)
@@ -1574,7 +1574,7 @@ class Ventana(QMainWindow):
                                        f"Profile «{self.perfil['nombre']}» saved"), 4000)
 
     def _titulo(self):
-        self.setWindowTitle(f"DSU Longshot {VERSION} — {self.perfil['nombre']}{' *' if self.sucio else ''}")
+        self.setWindowTitle(f"DSU Pad {VERSION} — {self.perfil['nombre']}{' *' if self.sucio else ''}")
 
     # -- navegación
     def ir(self, nombre):
@@ -1598,7 +1598,7 @@ class Ventana(QMainWindow):
             return
         self.bandeja.show()
         self.hide()
-        self.bandeja.showMessage("DSU Longshot", T("Sigo funcionando aquí. Doble clic para volver a abrir.",
+        self.bandeja.showMessage("DSU Pad", T("Sigo funcionando aquí. Doble clic para volver a abrir.",
                                                    "Still running here. Double-click to open again."),
                                  QSystemTrayIcon.Information, 3000)
 

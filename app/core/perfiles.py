@@ -206,12 +206,28 @@ def _sanear(p):
 
 
 # ---------------------------------------------------------------- archivos
+CARPETA_VIEJA = "DSU-Longshot"     # nombre del proyecto hasta la 1.1.0
+
+
 def carpeta_datos():
-    base = os.environ.get("DSU_LONGSHOT_DATOS")
+    base = os.environ.get("DSU_PAD_DATOS")
     if not base:
-        base = os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "DSU-Longshot")
+        raiz = os.environ.get("APPDATA") or os.path.expanduser("~")
+        base = os.path.join(raiz, "DSU-Pad")
+        _migrar_carpeta(os.path.join(raiz, CARPETA_VIEJA), base)
     os.makedirs(os.path.join(base, "perfiles"), exist_ok=True)
     return base
+
+
+def _migrar_carpeta(vieja, nueva):
+    """Copia (sin borrar la vieja) perfiles y ajustes de versiones anteriores."""
+    if os.path.exists(nueva) or not os.path.isdir(vieja):
+        return
+    import shutil
+    try:
+        shutil.copytree(vieja, nueva)
+    except OSError:
+        pass
 
 
 def _archivo_seguro(nombre):

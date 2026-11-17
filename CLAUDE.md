@@ -1,4 +1,4 @@
-# DSU Longshot
+# DSU Pad
 
 1. Windows desktop app (Python 3.11 + PySide6) that receives a DSU / cemuhook controller over UDP (port 26760),
    calibrates it and outputs a virtual DualShock 4 with gyro (ViGEmBus + vgamepad) that SDL games read.

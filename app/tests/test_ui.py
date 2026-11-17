@@ -84,7 +84,7 @@ def _robot_ui(qt, sim, cal, limite=90, prefijo="3_asistente_"):
 
 
 def test_flujo_completo_de_la_interfaz(qt, tmp_path, monkeypatch):
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     monkeypatch.setattr(QMessageBox, "question", lambda *a, **k: QMessageBox.Yes)
     monkeypatch.setattr(QMessageBox, "information", lambda *a, **k: QMessageBox.Ok)
     monkeypatch.setattr(QMessageBox, "warning", lambda *a, **k: QMessageBox.Ok)
@@ -207,7 +207,7 @@ def test_flujo_completo_de_la_interfaz(qt, tmp_path, monkeypatch):
 @pytest.mark.parametrize("control", ["wii-classic", "wii-remote"])
 def test_interfaz_con_classic_y_wii_remote(qt, tmp_path, monkeypatch, control):
     """Elegir el control en la página Control, calibrar, ver botones y sticks en Jugar."""
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     monkeypatch.setattr(QMessageBox, "question", lambda *a, **k: QMessageBox.Yes)
     monkeypatch.setattr(QMessageBox, "information", lambda *a, **k: QMessageBox.Ok)
     from app.core import controles as CT

@@ -21,7 +21,7 @@ def _registrar_errores():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="DSU Longshot: use any DSU (cemuhook) device as a PC controller")
+    ap = argparse.ArgumentParser(description="DSU Pad: use any DSU (cemuhook) device as a PC controller")
     ap.add_argument("--simulador", action="store_true",
                     help="start a simulated DSU device on this PC (to try the app without a phone)")
     ap.add_argument("--control", default="joycon-izq",
@@ -41,7 +41,7 @@ def main(argv=None):
     from app.core import perfiles as PF
     i18n.poner(PF.cargar_ajustes().get("idioma", "en"))
     qt = QApplication(sys.argv[:1])
-    qt.setApplicationName("DSU Longshot")
+    qt.setApplicationName("DSU Pad")
     qt.setStyle("Fusion")
     qt.setStyleSheet(ESTILO)
     qt.setWindowIcon(icono_app())

@@ -51,7 +51,7 @@ def test_perfiles_por_defecto_de_cada_control():
 
 
 def test_perfil_classic_ida_y_vuelta(tmp_path, monkeypatch):
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     p = PF.perfil_por_defecto(nombre="Classic", control="wii-classic")
     p["fisicos"]["C_A"] = "IZQ"
     p["orientacion"] = "fisica"             # no válida para el Classic: se corrige

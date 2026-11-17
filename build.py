@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compila la app con PyInstaller (carpeta onedir) y arma el .zip de la release.
 
-    python build.py            -> dist/DSU-Longshot/  y  dist/DSU-Longshot-<versión>-windows.zip
+    python build.py            -> dist/DSU-Pad/  y  dist/DSU-Pad-<versión>-windows.zip
 """
 import os
 import shutil
@@ -13,7 +13,7 @@ RAIZ = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, RAIZ)
 from app.ui.ventana import VERSION  # noqa: E402
 
-NOMBRE = "DSU-Longshot"
+NOMBRE = "DSU-Pad"
 
 
 def main():

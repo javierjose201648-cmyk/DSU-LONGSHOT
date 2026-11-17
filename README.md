@@ -1,19 +1,23 @@
-# DSU Longshot
+# DSU Pad
 
 **Turn any DSU (cemuhook) motion controller into a virtual DualShock 4 with gyro on Windows.**
 
 [Español](README.es.md)
 
-DSU Longshot receives buttons, sticks and motion from any device that speaks the
+DSU Pad receives buttons, sticks and motion from any device that speaks the
 [DSU / cemuhook protocol](https://v1993.github.io/cemuhook-protocol/), for example a phone running a DSU controller
 app. It calibrates the input and outputs a **virtual DualShock 4 with gyroscope**, so any game that reads controllers
-through SDL or Steam Input sees a real motion controller. It was built for **Longshot** (the native PC port of
-*Ocarina of Time*), but it works with any SDL-based game or emulator.
+through SDL or Steam Input sees a real motion controller.
+
+It is a general-purpose controller bridge: Windows sees a regular DualShock 4, so it works with PC games, Steam
+(including Steam Input gyro-to-mouse for games without motion support), emulators such as Dolphin, Cemu or Ryujinx,
+and XInput-only games through the optional Xbox 360 output. It started as a way to play **Longshot** (the native PC
+port of *Ocarina of Time*) with motion aiming.
 
 ```
-DSU device ──Wi-Fi / UDP 26760──▶ DSU Longshot ──▶ virtual DualShock 4 (ViGEmBus) ──▶ SDL / Steam Input ──▶ game
-                                               ├─▶ virtual Xbox 360 (optional, gyro → right stick)
-                                               └─▶ DSU server (optional, for Dolphin, Cemu, …)
+DSU device ──Wi-Fi / UDP 26760──▶ DSU Pad ──▶ virtual DualShock 4 (ViGEmBus) ──▶ SDL / Steam Input ──▶ game
+                                          ├─▶ virtual Xbox 360 (optional, gyro → right stick)
+                                          └─▶ DSU server (optional, for Dolphin, Cemu, …)
 ```
 
 ## Features
@@ -51,8 +55,8 @@ bits are learned automatically. Reports with real devices are welcome.
 
 ## Installation
 
-1. Download `DSU-Longshot-<version>-windows.zip` from **Releases** and unzip it. Python is not needed.
-2. Run `DSU-Longshot.exe`. The executable is not signed, so Windows SmartScreen may warn you:
+1. Download `DSU-Pad-<version>-windows.zip` from **Releases** and unzip it. Python is not needed.
+2. Run `DSU-Pad.exe`. The executable is not signed, so Windows SmartScreen may warn you:
    choose **More info → Run anyway**.
 3. If the **Connection** page reports that ViGEmBus is missing, click **Install ViGEmBus** and restart Windows.
 4. If Windows Firewall asks, allow the app on **private networks** (it receives UDP packets).
@@ -67,7 +71,7 @@ bits are learned automatically. Reports with real devices are welcome.
 5. **Play**: click **Enable controller**, then start your game.
 
 Next time: open the app → **Play → Enable controller**. You can also tick *Connect automatically on startup*, or run
-`DSU-Longshot.exe --jugar` to connect and enable the controller right away.
+`DSU-Pad.exe --jugar` to connect and enable the controller right away.
 
 ## Using it with games
 
@@ -92,7 +96,7 @@ the game will see two controllers.
 | Aiming is inverted | Invert the axis in **Settings → Motion**, in the game, or repeat **Calibration → Rotations**. |
 | Two controllers appear | Keep only one of *DualShock 4* / *Xbox 360* enabled. |
 | Stuck buttons after signal loss | If no data arrives for 2 s the controller returns to neutral by itself. |
-| The app closes unexpectedly | See `%APPDATA%\DSU-Longshot\errores.log`. |
+| The app closes unexpectedly | See `%APPDATA%\DSU-Pad\errores.log`. |
 
 ## Known limitations
 
@@ -109,7 +113,7 @@ python -m venv .venv
 .venv\Scripts\python -m app.main --simulador                         # app + simulated DSU device
 .venv\Scripts\python -m app.main --simulador --control wii-classic   # simulate another layout
 .venv\Scripts\python -m pytest app/tests                             # test suite
-.venv\Scripts\python build.py                                        # dist\DSU-Longshot\ and the .zip
+.venv\Scripts\python build.py                                        # dist\DSU-Pad\ and the .zip
 ```
 
 Project layout:

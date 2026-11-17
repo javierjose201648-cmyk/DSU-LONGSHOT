@@ -19,7 +19,7 @@ def qt():
 
 
 def test_ingles_por_defecto(tmp_path, monkeypatch):
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     assert PF.cargar_ajustes()["idioma"] == "en"
     assert PF.cargar_ajustes()["ip"] == ""          # sin IP de nadie por defecto
 
@@ -35,7 +35,7 @@ def test_textos_en_ingles_y_espanol():
 
 
 def test_ventana_en_ingles_y_cambio_a_espanol(qt, tmp_path, monkeypatch):
-    monkeypatch.setenv("DSU_LONGSHOT_DATOS", str(tmp_path))
+    monkeypatch.setenv("DSU_PAD_DATOS", str(tmp_path))
     i18n.poner("en")
     from app.ui.ventana import Ventana
     v = Ventana()
