@@ -1,0 +1,54 @@
+{
+  "slot": 1,
+  "remapeo": {
+    "A": "ABAJO",
+    "B": "DER",
+    "X": "IZQ",
+    "Y": "ARRIBA",
+    "L1": "L1",
+    "R1": "R1",
+    "L2": "L2",
+    "R2": "R2",
+    "SELECT": "SELECT",
+    "START": "START",
+    "L3": "L3",
+    "R3": "R3",
+    "ARRIBA": "ARRIBA",
+    "ABAJO": "ABAJO",
+    "IZQ": "IZQ",
+    "DER": "DER",
+    "HOME": "HOME",
+    "TOUCH": "TOUCH"
+  },
+  "invertir": {
+    "lx": false,
+    "ly": true,
+    "rx": false,
+    "ry": false
+  },
+  "centro": {
+    "lx": 128,
+    "ly": 128,
+    "rx": 128,
+    "ry": 128
+  },
+  "gyro_perm": [
+    2,
+    1,
+    0
+  ],
+  "gyro_signo": [
+    -1,
+    -1,
+    -1
+  ],
+  "gyro_escala": 1.0,
+  "gyro_bias": [
+    0.331893824726526,
+    0.15813122973120286,
+    -0.4957581511670095
+  ],
+  "gyro_ruido": 5.460635802993094,
+  "accel_escala": 1.0,
+  "accel_signo": 1
+}
