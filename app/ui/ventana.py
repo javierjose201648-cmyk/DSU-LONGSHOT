@@ -491,8 +491,14 @@ class PaginaControl(Pagina):
                 self.al_cambiar_perfil()
                 return
         nombre = p["nombre"]
-        if cid != p.get("control") and nombre == PF.NOMBRES_CONTROL.get(p.get("control")):
-            nombre = str(PF.NOMBRES_CONTROL[cid])
+        if cid != p.get("control"):
+            # Otro control = otro perfil: nunca se guarda encima del perfil anterior
+            nombre = base_nombre = str(PF.NOMBRES_CONTROL[cid])
+            existentes = set(PF.listar())
+            i = 2
+            while nombre in existentes:
+                nombre = f"{base_nombre} ({i})"
+                i += 1
         base = PF.perfil_por_defecto(orientacion, nombre, cid)
         nueva = base["orientacion"]
         base["slot"] = p.get("slot")

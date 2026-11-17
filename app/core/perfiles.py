@@ -100,6 +100,7 @@ def perfil_por_defecto(orientacion=None, nombre=None, control="joycon-izq"):
         "stick": _stick_cfg(stick_por_defecto(ctrl, orientacion)),
         "stick_der": _stick_cfg(stick_por_defecto(ctrl, orientacion)),   # solo si el control lo tiene
         "sticks_intercambiados": False,          # el stick izquierdo del teléfono sale como derecho y viceversa
+        "bits_cara": BITS_CARA,                  # nombres de los bits ✕ ○ □ △ (ver _corregir_bits_cara)
         "fisicos": ctrl.fisicos_por_defecto(),   # botón físico -> bit que manda la app (lo mide el asistente)
         "mapeo": mapeo,
         "gyro": {
@@ -129,9 +130,36 @@ def _mezclar(base, extra):
     return base
 
 
+# Hasta la 1.2.0 el parser llamaba A al bit de ○, B al de ✕, X al de △ e Y al de □
+# (al revés de la convención por posición que usa el resto de la app). Los perfiles
+# guardados antes de corregirlo se traducen al cargarlos.
+BITS_CARA = 2
+_CARA_VIEJA = {"A": "B", "B": "A", "X": "Y", "Y": "X"}
+
+
+def _corregir_bits_cara(p):
+    if p.get("bits_cara", 1) >= BITS_CARA:
+        return p
+    p["mapeo"] = {s: _CARA_VIEJA.get(f, f) for s, f in p.get("mapeo", {}).items()}
+    p["fisicos"] = {k: _CARA_VIEJA.get(v, v) for k, v in (p.get("fisicos") or {}).items()}
+    p["bits_cara"] = BITS_CARA
+    return p
+
+
 def migrar(datos):
     """Convierte cualquier versión anterior al esquema actual. Lanza ValueError
     si el archivo no es un perfil reconocible."""
+    if not isinstance(datos, dict):
+        raise ValueError("el archivo no contiene un perfil")
+    viejo = datos.get("bits_cara", 1) < BITS_CARA
+    p = _migrar(datos)
+    if viejo:
+        p["bits_cara"] = 1
+        _corregir_bits_cara(p)
+    return p
+
+
+def _migrar(datos):
     if not isinstance(datos, dict):
         raise ValueError("el archivo no contiene un perfil")
     version = datos.get("version")

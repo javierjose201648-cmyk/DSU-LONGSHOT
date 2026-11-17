@@ -53,12 +53,12 @@ dispositivo DSU ──Wi-Fi / UDP 26760──▶ DSU Pad ──▶ DualShock 4 v
 | Control | Sticks | Botones | Uso típico | Estado |
 |---|---|---|---|---|
 | Joy-Con izquierdo | 1 | ZL, SL, SR, −, +, Home, 4 flechas | De lado: Longshot y la mayoría de juegos | Verificado con un dispositivo real |
-| Wii Classic | 2 | a b x y, L R ZL ZR, AL/AR (L3/R3), cruceta, − + Home | Juegos que piden un control completo | Solo con simulador |
+| Wii Classic | 2 | a b x y, L R ZL ZR, AL/AR (L3/R3), cruceta, − + Home | Juegos que piden un control completo | Verificado con un dispositivo real |
 | Wii Remote | 0 | A, B, 1, 2, cruceta, − + Home | Dolphin y juegos con cruceta + movimiento | Solo con simulador |
 
 Los botones de Wii Classic y Wii Remote salen de los perfiles oficiales de Dolphin que publica el desarrollador de la
-app DSU Controller. De todos modos, el asistente mide cada botón, así que se adapta si un dispositivo los manda
-distinto. Se agradecen reportes de pruebas con dispositivos reales.
+app DSU Controller; el Wii Classic además se comprobó con un dispositivo real. De todos modos, el asistente mide cada
+botón, así que se adapta si un dispositivo los manda distinto. Se agradecen reportes de pruebas con dispositivos reales.
 
 ## Requisitos
 

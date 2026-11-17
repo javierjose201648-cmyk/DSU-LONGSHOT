@@ -2,7 +2,11 @@
 
 ## 1.2.1
 
-- Wii Classic: fixed inverted up/down on the sticks (DSU Controller sends Y = 0 for up; confirmed on a real device).
+- Fixed the names of the four DSU face-button bits: the protocol's ○ was read as ✕ (and □ as △). The Wii Classic
+  and Wii Remote now work with their default mapping; profiles saved with older versions are corrected on load.
+- Wii Classic: fixed inverted up/down on the sticks (DSU Controller sends Y = 0 for up). The whole layout is now
+  verified with a real device.
+- Changing the controller layout now starts a new profile instead of saving over the previous one.
 - Settings → Sticks: live view of both sticks with invert horizontal/vertical, swap axes (X ↔ Y) and swap left/right
   sticks.
 - The purple controller icon is now the icon of the executable, the taskbar and shortcuts.

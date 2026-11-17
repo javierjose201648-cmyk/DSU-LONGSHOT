@@ -23,9 +23,9 @@ BOTONES = ["A", "B", "X", "Y", "L1", "R1", "L2", "R2", "SELECT", "START",
 
 # byte 36: bit0..bit7 ; byte 37: bit0..bit7
 _BITS_36 = ["SELECT", "L3", "R3", "START", "ARRIBA", "DER", "ABAJO", "IZQ"]
-_BITS_37 = ["L2", "R2", "L1", "R1", "X", "A", "B", "Y"]
+_BITS_37 = ["L2", "R2", "L1", "R1", "Y", "B", "A", "X"]   # bit4 △, bit5 ○, bit6 ✕, bit7 □
 # bytes analógicos 44..55
-_ANALOGICOS = ["IZQ", "ABAJO", "DER", "ARRIBA", "Y", "B", "A", "X", "R1", "L1", "R2", "L2"]
+_ANALOGICOS = ["IZQ", "ABAJO", "DER", "ARRIBA", "X", "A", "B", "Y", "R1", "L1", "R2", "L2"]
 
 
 def _crc(datos):
@@ -106,8 +106,8 @@ def parsear_paquete(datos):
         "IZQ": bool(b1 & 0x80), "ABAJO": bool(b1 & 0x40), "DER": bool(b1 & 0x20),
         "ARRIBA": bool(b1 & 0x10), "START": bool(b1 & 0x08), "R3": bool(b1 & 0x04),
         "L3": bool(b1 & 0x02), "SELECT": bool(b1 & 0x01),
-        "Y": bool(b2 & 0x80), "B": bool(b2 & 0x40), "A": bool(b2 & 0x20),
-        "X": bool(b2 & 0x10), "R1": bool(b2 & 0x08), "L1": bool(b2 & 0x04),
+        "X": bool(b2 & 0x80), "A": bool(b2 & 0x40), "B": bool(b2 & 0x20),
+        "Y": bool(b2 & 0x10), "R1": bool(b2 & 0x08), "L1": bool(b2 & 0x04),
         "R2": bool(b2 & 0x02), "L2": bool(b2 & 0x01),
         "HOME": bool(home), "TOUCH": bool(touch),
     }

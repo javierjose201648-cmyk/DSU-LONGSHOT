@@ -26,7 +26,7 @@ timestamps, and the button bits of each layout.
 |---|---|---|
 | Left Joy-Con: connection, calibration, buttons, stick, gyro | ✓ | ✓ |
 | Longshot recognizes the virtual DS4 with gyro and integrates rotation | ✓ | ✓ |
-| Wii Classic: 17 buttons and both sticks through the virtual DS4 into SDL | ✓ | in progress (stick Y axis confirmed) |
+| Wii Classic: 17 buttons and both sticks through the virtual DS4 into SDL | ✓ | ✓ (also in an emulator) |
 | Wii Remote: buttons and motion | ✓ | not yet |
 | DSU server against a real Dolphin | — | not yet (tested with a test client) |
 | Installing ViGEmBus from the app | — | not yet |

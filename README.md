@@ -40,12 +40,13 @@ DSU device ──Wi-Fi / UDP 26760──▶ DSU Pad ──▶ virtual DualShock 
 | Layout | Sticks | Buttons | Typical use | Status |
 |---|---|---|---|---|
 | Left Joy-Con | 1 | ZL, SL, SR, −, +, Home, 4 arrows | Held sideways: Longshot and most games | Verified with a real device |
-| Wii Classic | 2 | a b x y, L R ZL ZR, AL/AR (L3/R3), d-pad, − + Home | Games that need a full controller | Simulator only |
+| Wii Classic | 2 | a b x y, L R ZL ZR, AL/AR (L3/R3), d-pad, − + Home | Games that need a full controller | Verified with a real device |
 | Wii Remote | 0 | A, B, 1, 2, d-pad, − + Home | Dolphin and d-pad + motion games | Simulator only |
 
 The button bits for Wii Classic and Wii Remote come from the official Dolphin profiles published by the
-DSU Controller app developer. The calibration wizard measures every button anyway, so layouts that send different
-bits are learned automatically. Reports with real devices are welcome.
+DSU Controller app developer (the Wii Classic was then confirmed on a real device). The calibration wizard measures
+every button anyway, so layouts that send different bits are learned automatically. Reports with real devices are
+welcome.
 
 ## Requirements
 

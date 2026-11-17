@@ -106,8 +106,8 @@ def parsear_paquete(datos):
         "IZQ": bool(b1 & 0x80), "ABAJO": bool(b1 & 0x40), "DER": bool(b1 & 0x20),
         "ARRIBA": bool(b1 & 0x10), "START": bool(b1 & 0x08), "R3": bool(b1 & 0x04),
         "L3": bool(b1 & 0x02), "SELECT": bool(b1 & 0x01),
-        "Y": bool(b2 & 0x80), "B": bool(b2 & 0x40), "A": bool(b2 & 0x20),
-        "X": bool(b2 & 0x10), "R1": bool(b2 & 0x08), "L1": bool(b2 & 0x04),
+        "X": bool(b2 & 0x80), "A": bool(b2 & 0x40), "B": bool(b2 & 0x20),
+        "Y": bool(b2 & 0x10), "R1": bool(b2 & 0x08), "L1": bool(b2 & 0x04),
         "R2": bool(b2 & 0x02), "L2": bool(b2 & 0x01),
         "HOME": bool(home), "TOUCH": bool(touch),
     }

@@ -5,7 +5,7 @@ oficiales de Dolphin del desarrollador de la app:
 https://github.com/breeze2/dsu-controller-guides/tree/master/configs/dolphin
 (DSUController.ini = Wii Remote, DSUController_with_Classic.ini = Wii Classic).
 El Joy-Con izquierdo se verificó con el teléfono real (referencia/captura_joycon-izq.json).
-Para Classic y Wii Remote es un SUPUESTO hasta probar con el teléfono: el
+El Wii Classic se verificó con un teléfono real en la 1.2.1. El Wii Remote es un SUPUESTO: el
 asistente de calibración vuelve a medir cada botón de todos modos.
 
 Coordenadas del dibujo: píxeles del screenshot del teléfono en vertical.
@@ -143,6 +143,7 @@ WII_CLASSIC = Control(
     {"lado": "Acostado (ZL y ZR arriba) — como un control completo"},
     {"lado": STICK_Y_ARRIBA_CERO},
     {"lado": GYRO_LADO},
+    verificado=True,       # 17 botones y 2 sticks probados con un teléfono real (1.2.1)
     nota=L("Parecido a un Pro Controller: 2 sticks, a b x y, L R ZL ZR, cruceta, − + y Home. "
            "AL y AR llegan como L3 y R3 (clic de los sticks).",
            "Similar to a Pro Controller: 2 sticks, a b x y, L R ZL ZR, d-pad, − + and Home. "

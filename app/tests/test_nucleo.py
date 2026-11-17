@@ -311,3 +311,24 @@ def test_datos_de_la_version_anterior_se_copian(tmp_path, monkeypatch):
     assert PF.carpeta_datos() == str(tmp_path / "DSU-Pad")
     assert PF.listar() == ["Mio"]
     assert vieja.exists()                  # la carpeta vieja no se borra
+
+
+def test_bits_de_cara_segun_la_spec_dsu():
+    """Analógicos 48..51 = □ ✕ ○ △ (como Dolphin); A = ✕ abajo, B = ○ derecha, X = □, Y = △."""
+    from app.core import protocolo as P
+    for nombre, byte in (("X", 48), ("A", 49), ("B", 50), ("Y", 51)):
+        datos = P.construir_datos(1, 1, [nombre])
+        assert datos[byte] == 255, nombre
+        assert P.parsear_paquete(datos).presionados() == [nombre]
+
+
+def test_perfil_con_nombres_de_cara_viejos_se_corrige():
+    viejo = PF.perfil_por_defecto(control="wii-classic")
+    del viejo["bits_cara"]
+    # Así quedó guardado un Classic calibrado con la 1.2.0: a llegó como "A" y se reasignó
+    viejo["fisicos"].update(C_A="A", C_B="B", C_X="X", C_Y="Y")
+    viejo["mapeo"].update(B="A", A="B", Y="X", X="Y")
+    p = PF.migrar(viejo)
+    assert p["fisicos"]["C_A"] == "B" and p["fisicos"]["C_Y"] == "X"
+    assert p["mapeo"] == PF.perfil_por_defecto(control="wii-classic")["mapeo"]
+    assert PF.migrar(p) == p               # ya corregido: no se vuelve a tocar
