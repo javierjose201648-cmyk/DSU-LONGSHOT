@@ -18,12 +18,19 @@ from app.core import perfiles as PF
 from app.core import salidas as S
 from app.core.motor import BUSCANDO, CONECTADO, DETENIDO, SIN_DATOS, Motor
 from app.core.transformar import stick_logico
+
+
+def stick_fisico(perfil, crudo, cual):
+    """Stick físico del teléfono ya rotado con su matriz (sin zona muerta ni intercambio)."""
+    cfg = perfil["stick" if cual == "izq" else "stick_der"]
+    x, y = (crudo.lx, crudo.ly) if cual == "izq" else (crudo.rx, crudo.ry)
+    return stick_logico(x, y, dict(cfg, zona_muerta=0.0, rango=1.0))
 from app import i18n
 from app.i18n import T
 from app.ui.widgets import (AMBAR, MORADO, ROJO, TENUE, VERDE, JoyConWidget, MovimientoWidget,
                             Semaforo, StickWidget)
 
-VERSION = "1.2.0"
+VERSION = "1.2.1"
 
 
 def fuente_a_fisicos(perfil):
@@ -55,8 +62,9 @@ def pintar_vivo(dibujo, perfil, crudo, log):
         c = perfil["stick"]["centro"]
         dibujo.stick = ((crudo.lx - c[0]) / 127.0, (crudo.ly - c[1]) / 127.0)
     else:
-        dibujo.stick = (log.lx, log.ly)
-        dibujo.stick_der = (log.rx, log.ry)
+        # el dibujo muestra cada stick físico donde está en el teléfono
+        dibujo.stick = stick_fisico(perfil, crudo, "izq")
+        dibujo.stick_der = stick_fisico(perfil, crudo, "der")
 
 
 MODELOS = {0: "—", 1: "DS3", 2: "DS4", 3: i18n.L("genérico", "generic")}
@@ -68,11 +76,13 @@ PAGINAS_EN = {"Conexión": "Connection", "Control": "Controller", "Calibración"
               "Ajustes": "Settings", "Perfiles": "Profiles", "Jugar": "Play"}
 
 
-def icono_app():
-    pm = QPixmap(64, 64)
+def pixmap_icono(tam=64):
+    """El control morado (ícono de la app) dibujado a `tam` píxeles."""
+    pm = QPixmap(tam, tam)
     pm.fill(Qt.transparent)
     p = QPainter(pm)
     p.setRenderHint(QPainter.Antialiasing)
+    p.scale(tam / 64.0, tam / 64.0)
     p.setPen(Qt.NoPen)
     p.setBrush(QColor("#8d4fc7"))
     p.drawRoundedRect(6, 14, 52, 36, 12, 12)
@@ -82,7 +92,14 @@ def icono_app():
     for x, y in ((44, 24), (38, 31), (50, 31), (44, 38)):
         p.drawEllipse(x - 3, y - 3, 6, 6)
     p.end()
-    return QIcon(pm)
+    return pm
+
+
+def icono_app():
+    ico = QIcon()
+    for tam in (16, 24, 32, 48, 64, 128, 256):
+        ico.addPixmap(pixmap_icono(tam))
+    return ico
 
 
 def tarjeta(*widgets, titulo=None):
@@ -703,16 +720,6 @@ class PaginaCalibracion(Pagina):
         vivo = f.estado == CONECTADO and crudo is not None
         if vivo:
             pintar_vivo(self.dibujo, self.v.perfil, crudo, log)
-            if self.modo == "pasos" and self.asis and self.asis.paso.tipo.startswith("stick") \
-                    and not CT.control(self.v.perfil.get("control")).stick_vertical:
-                # aún sin calibrar: mostrar el crudo para que se vea que se mueve
-                cual = self.asis.paso.info.get("cual", "izq")
-                x, y = (crudo.lx, crudo.ly) if cual == "izq" else (crudo.rx, crudo.ry)
-                v = ((x - 128) / 127.0, (y - 128) / 127.0)
-                if cual == "izq":
-                    self.dibujo.stick = v
-                else:
-                    self.dibujo.stick_der = v
             self.stick_w.x, self.stick_w.y = log.lx, log.ly
             self.stick_w.zona_muerta = self.v.perfil["stick"]["zona_muerta"]
             self.stick_w.rango = self.v.perfil["stick"]["rango"]
@@ -804,9 +811,11 @@ class PaginaCalibracion(Pagina):
             else:
                 self.dibujo.flecha_stick = (0, 1) if p.info["direccion"] == "arriba" else (1, 0)
             self.detalle.setText(paso_n + T(" · «Tu arriba» y «tu derecha» son las de la pantalla del juego, tal "
-                                            "como sostienes el teléfono.",
+                                            "como sostienes el teléfono. Si el dibujo se mueve hacia otro lado no "
+                                            "importa: el asistente aprende la dirección real.",
                                             " · «Your up» and «your right» are those of the game screen, the way "
-                                            "you hold the phone."))
+                                            "you hold the phone. If the drawing moves another way, that's fine: the "
+                                            "wizard learns the real direction."))
         elif p.tipo == "reposo":
             self.pila_vis.setCurrentWidget(self.mov)
             self.mov.angulos, self.mov.meta = [0, 0, 0], None
@@ -896,27 +905,46 @@ class PaginaAjustes(Pagina):
         self.nota_map = etiqueta("", "sub")
         cl.addWidget(tarjeta(self.nota_map, self.tabla, fila(b_def), titulo=T("Mapeo de botones", "Button mapping")))
 
-        # --- stick
-        self.stick_w = StickWidget()
-        self.stick_w.setFixedSize(170, 170)
+        # --- sticks: vista en vivo y reasignación de cada stick físico
         self.s_zm = self._slider(0, 50, "stick", "zona_muerta", 100)
         self.s_rango = self._slider(50, 100, "stick", "rango", 100)
-        self.c_sx = self._check(T("Invertir horizontal", "Invert horizontal"), "stick", "invertir_x")
-        self.c_sy = self._check(T("Invertir vertical", "Invert vertical"), "stick", "invertir_y")
         g = QGridLayout()
         g.addWidget(QLabel(T("Zona muerta", "Dead zone")), 0, 0)
         g.addLayout(self.s_zm[2], 0, 1)
         g.addWidget(QLabel(T("Rango (tope)", "Range (max)")), 1, 0)
         g.addLayout(self.s_rango[2], 1, 1)
-        g.addWidget(self.c_sx, 2, 1)
-        g.addWidget(self.c_sy, 3, 1)
-        h = QHBoxLayout()
-        h.addWidget(self.stick_w)
-        h.addLayout(g, 1)
-        cl.addWidget(tarjeta(h, etiqueta(T("Nota: muchos juegos aplican además su propia zona muerta (Longshot: "
-                                           "«Zona muerta de palanca», 24% por defecto).",
-                                           "Note: many games apply their own dead zone on top of this (Longshot: "
-                                           "«Stick dead zone», 24% by default)."), "sub"), titulo="Stick"))
+        self.c_sticks = []
+        self.col_stick = {}
+        self.stick_ws = {}
+        cols = QHBoxLayout()
+        for cual, sec in (("izq", "stick"), ("der", "stick_der")):
+            w = StickWidget()
+            w.setFixedSize(150, 150)
+            titulo_st = etiqueta("", "sub")
+            checks = [self._check(T("Invertir horizontal", "Invert horizontal"), sec, "invertir_x"),
+                      self._check(T("Invertir vertical", "Invert vertical"), sec, "invertir_y"),
+                      self._check(T("Intercambiar ejes (X ↔ Y)", "Swap axes (X ↔ Y)"), sec, "intercambiar_ejes")]
+            self.c_sticks += checks
+            caja = QWidget()
+            v = QVBoxLayout(caja)
+            v.setContentsMargins(0, 0, 0, 0)
+            v.addWidget(titulo_st)
+            v.addWidget(w)
+            for c in checks:
+                v.addWidget(c)
+            self.col_stick[cual] = (caja, titulo_st)
+            self.stick_ws[cual] = w
+            cols.addWidget(caja)
+        cols.addStretch(1)
+        self.stick_w = self.stick_ws["izq"]
+        self.c_swap = self._check(T("Intercambiar stick izquierdo y derecho", "Swap left and right sticks"),
+                                  None, "sticks_intercambiados")
+        self.c_sticks.append(self.c_swap)
+        cl.addWidget(tarjeta(cols, self.c_swap, g, etiqueta(T(
+            "Si un stick va al revés o de lado, corrígelo aquí mientras lo mueves y miras el círculo (o repite "
+            "Calibración → Stick). Muchos juegos aplican además su propia zona muerta.",
+            "If a stick moves inverted or sideways, fix it here while you move it and watch the circle (or repeat "
+            "Calibration → Stick). Many games also apply their own dead zone."), "sub"), titulo="Sticks"))
 
         # --- movimiento
         self.mov = MovimientoWidget()
@@ -1010,13 +1038,21 @@ class PaginaAjustes(Pagina):
         c._liga = (seccion, clave, indice)
         return c
 
+    @staticmethod
+    def _valor(p, seccion, clave):
+        return p.get(clave) if seccion is None else p[seccion].get(clave)
+
     def _poner(self, seccion, clave, valor, indice=None):
         if getattr(self, "_cargando", False):
             return
         p = copy.deepcopy(self.v.perfil)
         if seccion == "stick" and clave in ("zona_muerta", "rango") and "stick_der" in p:
             p["stick_der"][clave] = valor       # la zona muerta y el rango valen para los dos sticks
-        if indice is None:
+        if seccion is None:                     # opción del perfil, no de una sección
+            if p.get(clave) == valor:
+                return
+            p[clave] = valor
+        elif indice is None:
             if p[seccion].get(clave) == valor:
                 return
             p[seccion][clave] = valor
@@ -1034,10 +1070,18 @@ class PaginaAjustes(Pagina):
             val = int(round(p[sec][clave] * factor))
             s.setValue(val)
             lab.setText(f"{val}%" if factor == 100 else f"{val}")
-        for c in [self.c_sx, self.c_sy, self.c_gs, self.c_gsx, self.c_gsy, self.c_ds4, self.c_xbox,
-                  self.c_dsu] + self.c_inv:
+        for c in [self.c_gs, self.c_gsx, self.c_gsy, self.c_ds4, self.c_xbox,
+                  self.c_dsu] + self.c_inv + self.c_sticks:
             sec, clave, idx = c._liga
-            c.setChecked(bool(p[sec][clave] if idx is None else p[sec][clave][idx]))
+            c.setChecked(bool(self._valor(p, sec, clave) if idx is None else p[sec][clave][idx]))
+        ctrl = CT.control(p.get("control"))
+        dos = len(ctrl.sticks) > 1
+        self.col_stick["izq"][0].setVisible(bool(ctrl.sticks))
+        self.col_stick["der"][0].setVisible(dos)
+        self.c_swap.setVisible(dos)
+        self.col_stick["izq"][1].setText(T("Stick izquierdo del teléfono", "Phone's left stick") if dos
+                                         else T("Stick del teléfono", "Phone stick"))
+        self.col_stick["der"][1].setText(T("Stick derecho del teléfono", "Phone's right stick"))
         self.sp_dsu.setValue(int(p["salidas"].get("dsu_puerto", 26761)))
         self._cargando = False
         self._pintar_mapeo()
@@ -1050,9 +1094,8 @@ class PaginaAjustes(Pagina):
             {"joycon-izq": T("SL y L llegan idénticos (la app no los distingue) y presionar el stick no manda nada.",
                              "SL and L arrive identical (the app does not tell them apart) and clicking the stick "
                              "sends nothing."),
-             "wii-classic": T("Zona muerta y rango del stick valen para los dos sticks; «Invertir» solo para el "
-                              "izquierdo.", "Stick dead zone and range apply to both sticks; «Invert» only to the "
-                              "left one."),
+             "wii-classic": T("Si un stick va al revés, corrígelo en la sección Sticks de abajo.",
+                              "If a stick is inverted, fix it in the Sticks section below."),
              "wii-remote": T("El Wii Remote no tiene stick: la sección Stick no hace nada con este control.",
                              "The Wii Remote has no stick: the Stick section does nothing for this controller.")}[cid])
 
@@ -1126,12 +1169,16 @@ class PaginaAjustes(Pagina):
             elif time.monotonic() - self.t_escucha > 12:
                 self.escuchando = None
                 self._pintar_mapeo()
-        st = self.v.perfil["stick"]
-        self.stick_w.x, self.stick_w.y = log.lx, log.ly
-        sin = dict(st, zona_muerta=0.0, rango=1.0)
-        self.stick_w.crudo = stick_logico(crudo.lx, crudo.ly, sin)
-        self.stick_w.zona_muerta, self.stick_w.rango = st["zona_muerta"], st["rango"]
-        self.stick_w.update()
+        p = self.v.perfil
+        # cada círculo muestra un stick FÍSICO del teléfono, con sus ajustes aplicados
+        for cual, sec in (("izq", "stick"), ("der", "stick_der")):
+            st = p[sec]
+            w = self.stick_ws[cual]
+            x, y = (crudo.lx, crudo.ly) if cual == "izq" else (crudo.rx, crudo.ry)
+            w.x, w.y = stick_logico(x, y, st)
+            w.crudo = stick_logico(x, y, dict(st, zona_muerta=0.0, rango=1.0))
+            w.zona_muerta, w.rango = st["zona_muerta"], st["rango"]
+            w.update()
         if self._prev is not None and crudo is not self._prev:
             dt = min(C.dt_entre(self._prev, crudo) or 0.0, 0.1)
             for i in range(3):

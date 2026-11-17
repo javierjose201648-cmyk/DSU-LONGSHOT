@@ -37,6 +37,13 @@ def main(argv=None):
     from app.ui.ventana import Ventana, icono_app
 
     _registrar_errores()
+    if sys.platform == "win32":
+        # Identidad propia en la barra de tareas: así Windows muestra el ícono de la app
+        try:
+            import ctypes
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("DSUPad.App")
+        except (AttributeError, OSError):
+            pass
     from app import i18n
     from app.core import perfiles as PF
     i18n.poner(PF.cargar_ajustes().get("idioma", "en"))

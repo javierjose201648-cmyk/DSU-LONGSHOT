@@ -18,12 +18,18 @@ NOMBRE = "DSU-Pad"
 
 def main():
     dist = os.path.join(RAIZ, "dist")
+    if os.name == "nt":
+        corriendo = subprocess.run(["tasklist", "/FI", f"IMAGENAME eq {NOMBRE}.exe", "/NH"],
+                                   capture_output=True, text=True).stdout
+        if f"{NOMBRE}.exe" in corriendo:
+            sys.exit(f"{NOMBRE}.exe está abierto: ciérralo antes de compilar (si no, se borra a medias).")
     shutil.rmtree(os.path.join(dist, NOMBRE), ignore_errors=True)
     import vgamepad
     carpeta_vg = os.path.dirname(vgamepad.__file__)
     cmd = [
         sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--onedir", "--windowed",
         "--name", NOMBRE,
+        "--icon", os.path.join(RAIZ, "assets", "icono.ico"),   # ícono del .exe y de los accesos directos
         "--distpath", dist, "--workpath", os.path.join(RAIZ, "build", "pyinstaller"),
         "--specpath", os.path.join(RAIZ, "build"),
         # vgamepad carga ViGEmClient.dll desde su propia carpeta

@@ -76,7 +76,7 @@ NOMBRES_CONTROL = {"joycon-izq": L("Joy-Con izquierdo (Longshot)", "Left Joy-Con
 def _stick_cfg(matriz):
     return {"centro": [128, 128], "matriz": copy.deepcopy(matriz), "zona_muerta": 0.08,
             "rango": 0.95,           # fracción del recorrido que ya cuenta como tope
-            "invertir_x": False, "invertir_y": False}
+            "invertir_x": False, "invertir_y": False, "intercambiar_ejes": False}
 
 
 def perfil_por_defecto(orientacion=None, nombre=None, control="joycon-izq"):
@@ -99,6 +99,7 @@ def perfil_por_defecto(orientacion=None, nombre=None, control="joycon-izq"):
         "slot": None,                # None = el primero que mande datos
         "stick": _stick_cfg(stick_por_defecto(ctrl, orientacion)),
         "stick_der": _stick_cfg(stick_por_defecto(ctrl, orientacion)),   # solo si el control lo tiene
+        "sticks_intercambiados": False,          # el stick izquierdo del teléfono sale como derecho y viceversa
         "fisicos": ctrl.fisicos_por_defecto(),   # botón físico -> bit que manda la app (lo mide el asistente)
         "mapeo": mapeo,
         "gyro": {

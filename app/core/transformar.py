@@ -39,6 +39,8 @@ def stick_logico(lx, ly, cfg):
     m = cfg["matriz"]
     x = m[0][0] * vx + m[0][1] * vy
     y = m[1][0] * vx + m[1][1] * vy
+    if cfg.get("intercambiar_ejes"):
+        x, y = y, x
     if cfg.get("invertir_x"):
         x = -x
     if cfg.get("invertir_y"):
@@ -86,6 +88,8 @@ def transformar(e, perfil):
     # queda en el centro (lo puede mover el gyro->stick en las salidas).
     if "der" in control(perfil.get("control")).sticks:
         log.rx, log.ry = stick_logico(e.rx, e.ry, perfil["stick_der"])
+        if perfil.get("sticks_intercambiados"):      # cada stick conserva sus ajustes
+            log.lx, log.ly, log.rx, log.ry = log.rx, log.ry, log.lx, log.ly
     log.l2 = _gatillo(e, mapeo.get("L2"), log.botones["L2"])
     log.r2 = _gatillo(e, mapeo.get("R2"), log.botones["R2"])
     log.gyro, log.accel = movimiento_logico(e.gyro, e.accel, perfil)

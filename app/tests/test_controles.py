@@ -63,7 +63,7 @@ def test_perfil_classic_ida_y_vuelta(tmp_path, monkeypatch):
 
 def test_classic_stick_derecho_llega_al_estado_logico():
     p = PF.perfil_por_defecto(control="wii-classic")
-    log = transformar(_estado(["B", "R3"], lx=128, ly=254, rx=254, ry=128), p)
+    log = transformar(_estado(["B", "R3"], lx=128, ly=2, rx=254, ry=128), p)
     assert log.botones["B"] and log.botones["R3"]
     assert log.ly > 0.95 and log.rx > 0.95 and abs(log.ry) < 0.05
     # El Joy-Con no tiene stick derecho: rx/ry de la app se ignoran
@@ -93,8 +93,8 @@ def test_asistente_con_robot(control, ejes):
         try:
             _leer(c, 0.3)
             if n_sticks == 2:
-                assert perfil["stick"]["matriz"] == [[1, 0], [0, 1]]
-                assert perfil["stick_der"]["matriz"] == [[1, 0], [0, 1]]
+                assert perfil["stick"]["matriz"] == [[1, 0], [0, -1]]
+                assert perfil["stick_der"]["matriz"] == [[1, 0], [0, -1]]
                 sim.stick(0, 1)
                 sim.stick(1, 0, "der")
                 log = transformar(_leer(c, 0.2)[-1], perfil)
@@ -128,3 +128,22 @@ def test_asistente_aprende_un_bit_distinto_al_esperado():
     nuevo = asis.aplicar(perfil)
     assert nuevo["fisicos"]["C_A"] == "IZQ"
     assert nuevo["mapeo"]["B"] == "IZQ"         # el botón a sigue saliendo como ○
+
+
+def test_reasignar_sticks_invertir_intercambiar_ejes_y_sticks():
+    p = PF.perfil_por_defecto(control="wii-classic")
+    # DSU Controller manda Y = 0 arriba también en el Classic (probado con un teléfono real)
+    assert p["stick"]["matriz"] == [[1, 0], [0, -1]]
+    arriba_izq = _estado(lx=128, ly=2, rx=254, ry=128)          # izq arriba, der a la derecha
+    log = transformar(arriba_izq, p)
+    assert log.ly > 0.95 and log.rx > 0.95
+    p["stick"]["invertir_y"] = True
+    assert transformar(arriba_izq, p).ly < -0.95
+    p["stick"]["invertir_y"] = False
+    p["stick"]["intercambiar_ejes"] = True
+    log = transformar(arriba_izq, p)
+    assert log.lx > 0.95 and abs(log.ly) < 0.05
+    p["stick"]["intercambiar_ejes"] = False
+    p["sticks_intercambiados"] = True
+    log = transformar(arriba_izq, p)
+    assert log.ry > 0.95 and log.lx > 0.95 and abs(log.ly) < 0.05

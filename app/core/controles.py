@@ -17,7 +17,9 @@ from app.i18n import L
 # Matrices del stick: lógico(x derecha, y arriba) = M · crudo(x, y), crudo centrado.
 STICK_LADO = [[0, 1], [1, 0]]      # Joy-Con: la app no rota el stick y usa Y = 0 arriba
 STICK_FISICA = [[1, 0], [0, -1]]   # Joy-Con vertical (Y = 0 arriba)
-STICK_ESTANDAR = [[1, 0], [0, 1]]  # protocolo DSU estándar: Y = 255 arriba (perfil de Dolphin)
+STICK_ESTANDAR = [[1, 0], [0, 1]]  # protocolo DSU estándar: Y = 255 arriba
+# DSU Controller manda Y = 0 arriba también en el Classic (probado con un teléfono real, 1.2.1)
+STICK_Y_ARRIBA_CERO = [[1, 0], [0, -1]]
 
 GYRO_LADO = {"perm": [2, 1, 0], "signo": [-1, -1, -1]}   # teléfono acostado, arriba del teléfono a la izquierda
 GYRO_FISICA = {"perm": [0, 1, 2], "signo": [1, 1, 1]}
@@ -139,7 +141,7 @@ WII_CLASSIC = Control(
     ],
     {"izq": (145, 470, 62), "der": (145, 1200, 62)},
     {"lado": "Acostado (ZL y ZR arriba) — como un control completo"},
-    {"lado": STICK_ESTANDAR},
+    {"lado": STICK_Y_ARRIBA_CERO},
     {"lado": GYRO_LADO},
     nota=L("Parecido a un Pro Controller: 2 sticks, a b x y, L R ZL ZR, cruceta, − + y Home. "
            "AL y AR llegan como L3 y R3 (clic de los sticks).",
